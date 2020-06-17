@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+    <util:properties id="jdbcProps" location="classpath:bd.properties"/>
+    <bean id="userRepo" class="repo.RepoUser">
+        <constructor-arg ref="jdbcProps"></constructor-arg>
+    </bean>
+    <bean id="meciRepo" class="repo.RepoMeci">
+        <constructor-arg ref="jdbcProps"></constructor-arg>
+    </bean>
+    <bean id="biletRepo" class="repo.RepoBilet">
+        <constructor-arg ref="jdbcProps"></constructor-arg>
+        <constructor-arg ref="meciRepo"></constructor-arg>
+    </bean>
+    <bean id="service" class="Server">
+        <constructor-arg ref="meciRepo"></constructor-arg>
+        <constructor-arg ref="biletRepo"></constructor-arg>
+        <constructor-arg ref="userRepo"></constructor-arg>
+    </bean>
+    <bean id="RemoteRmiRegistry"  class="org.springframework.remoting.rmi.RmiRegistryFactoryBean">
+        <property name="alwaysCreate" value="true" />
+        <property name="port" value="12345"></property>
+    </bean>
+    <bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+        <property name="service" ref="service"/>
+        <property name="serviceInterface" value="IServer"/>
+        <property name="serviceName" value="Server"/>
+        <property name="replaceExistingBinding" value="true"></property>
+        <property name="registry" ref="RemoteRmiRegistry"></property>
+    </bean>
+</beans>

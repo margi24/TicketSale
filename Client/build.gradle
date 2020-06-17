@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'labNetworking'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+mainClassName='StartObjectClient'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    compile project (":Model")
+    compile project (":Server")
+    compile "org.openjfx:javafx-base:11:win"
+    compile "org.openjfx:javafx-graphics:11:win"
+    compile "org.openjfx:javafx-controls:11:win"
+    compile "org.openjfx:javafx-fxml:11:win"
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
